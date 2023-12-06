@@ -25,10 +25,11 @@ class Sarsa(object):
         self.sample_count += 1
         self.epsilon = self.epsilon_end + (self.epsilon_start - self.epsilon_end) * math.exp(
             -1. * self.sample_count / self.epsilon_decay)  # epsilon是会递减的，这里选择指数递减
-        best_action = np.argmax(self.Q_table[str(state)])
-        action_probs = np.ones(self.n_actions, dtype=float) * self.epsilon / self.n_actions
-        action_probs[best_action] += (1.0 - self.epsilon)
-        action = np.random.choice(np.arange(len(action_probs)), p=action_probs)
+        # e-greedy 策略
+        if np.random.uniform(0, 1) > self.epsilon:
+            action = np.argmax(self.Q_table[str(state)])
+        else:
+            action = np.random.choice(self.n_actions)
         return action
 
     def predict(self, state):
