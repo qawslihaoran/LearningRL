@@ -2,7 +2,7 @@ import numpy as np
 import math
 import torch
 from collections import defaultdict
-import config
+import qlearning_config
 
 
 class QLearning(object):

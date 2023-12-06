@@ -1,4 +1,4 @@
-import QLearning.config
+import QLearning.qlearning_config
 import env_cliff_walking_wapper
 import q_learning
 
