@@ -1,8 +1,3 @@
-import QLearning.qlearning_config
-import env_cliff_walking_wapper
-import q_learning
-
-
 def train(cfg, env, agent, is_render=False):
     print('开始训练!')
     print(f'环境{cfg.env_name}, 算法:{cfg.algo_name}, 设备:{cfg.device}')

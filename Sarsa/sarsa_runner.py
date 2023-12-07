@@ -1,5 +1,5 @@
 import gym
-import QLearning.env_cliff_walking_wapper
+import GameEnvs.env_cliff_walking_wapper
 import sarsa
 import sarsa_config
 import sarsa_train
@@ -13,7 +13,7 @@ def env_agent_config(cfg, seed=1):
     :return: env [type]: 环境, agent : 智能体
     """
     game_env = gym.make(cfg.env_name)
-    game_env = QLearning.env_cliff_walking_wapper.CliffWalkingWapper(game_env)
+    game_env = GameEnvs.env_cliff_walking_wapper.CliffWalkingWapper(game_env)
     n_states = game_env.observation_space.n  # 状态维度
     n_actions = game_env.action_space.n  # 动作维度
     print(f"状态数：{n_states}，动作数：{n_actions}")

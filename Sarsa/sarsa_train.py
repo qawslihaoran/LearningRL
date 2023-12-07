@@ -1,5 +1,4 @@
 import sarsa
-import QLearning.env_cliff_walking_wapper
 
 
 def train(cfg, env, agent: sarsa.Sarsa, is_render=False):

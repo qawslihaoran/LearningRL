@@ -1,6 +1,6 @@
 import qlearning_config
 import gym
-import env_cliff_walking_wapper
+from GameEnvs import env_cliff_walking_wapper
 import q_learning
 import qlearning_train
 
@@ -24,6 +24,6 @@ if __name__ == '__main__':
 
     # 测试
 
-    res_dic = qlearning_train.test(cfg, env, agent, False)
+    res_dic = qlearning_train.test(cfg, env, agent, True)
     qlearning_config.plot_rewards(res_dic['rewards'],
                  title=f"testing curve on {cfg.device} of {cfg.algo_name} for {cfg.env_name}")  # 画出结果
