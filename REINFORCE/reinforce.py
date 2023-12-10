@@ -50,7 +50,7 @@ class Reinforce:
         self.optimizer.step()
 
 
-def train(agent: Reinforce, env, num_episodes):
+def train(agent: Reinforce, env, num_episodes, max_steps):
     return_list = []
     for i in range(10):
         with tqdm(total=int(num_episodes / 10), desc='Iteration %d' % i) as pbar:
@@ -86,6 +86,7 @@ def train(agent: Reinforce, env, num_episodes):
                             '%.3f' % np.mean(return_list[-10:])
                     })
                 pbar.update(1)
+    env.close()
     return return_list
 
 
