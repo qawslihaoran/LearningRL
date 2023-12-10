@@ -172,7 +172,7 @@ if __name__ == '__main__':
                     replay_buffer.add(state, action, reward, next_state, done)
                     state = next_state
                     episode_return += reward
-                    env.render()
+                    # env.render()
                     # 当buffer数据的数量超过一定值后,才进行Q网络训练
                     if replay_buffer.size() > minimal_size:
                         b_s, b_a, b_r, b_ns, b_d = replay_buffer.sample(batch_size)
