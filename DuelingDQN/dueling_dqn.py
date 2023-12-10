@@ -30,7 +30,7 @@ class VAnet(torch.nn.Module):
     只有一层隐藏层的A网络和V网络
     """
 
-    def __init__(self, state_dim, action_dim, hidden_dim=128):
+    def __init__(self, state_dim,hidden_dim, action_dim):
         super(VAnet, self).__init__()
         self.hidden_layer = torch.nn.Sequential(
             torch.nn.Linear(state_dim, hidden_dim),
@@ -122,8 +122,6 @@ class DQN:
 
 def train_dqn(agent, environment, number_episodes, replay_buffer, min_size, batch_size):
     return_list = []
-    max_q_value_list = []
-    max_q_value = 0
     for i in range(10):
         with tqdm(total=int(num_episodes / 10), desc='Iteration %d' % i) as pbar:
             for i_episode in range(int(num_episodes / 10)):
@@ -136,7 +134,6 @@ def train_dqn(agent, environment, number_episodes, replay_buffer, min_size, batc
                     replay_buffer.add(state, action, reward, next_state, done)
                     state = next_state
                     episode_return += reward
-                    # env.render()
                     if replay_buffer.size() > minimal_size:  # 容量达到最小限制,才进行更新
                         b_s, b_a, b_r, b_ns, b_d = replay_buffer.sample(
                             batch_size)
@@ -150,6 +147,7 @@ def train_dqn(agent, environment, number_episodes, replay_buffer, min_size, batc
                         agent.update(transition_dict)
                 return_list.append(episode_return)
                 if (i_episode + 1) % 10 == 0:
+                    print(return_list)
                     pbar.set_postfix({
                         'episode':
                             '%d' % (num_episodes / 10 * i + i_episode + 1),
@@ -157,7 +155,7 @@ def train_dqn(agent, environment, number_episodes, replay_buffer, min_size, batc
                             '%.3f' % np.mean(return_list[-10:])
                     })
                 pbar.update(1)
-    return return_list, max_q_value_list
+    return return_list
 
 
 if __name__ == '__main__':
@@ -183,28 +181,25 @@ if __name__ == '__main__':
     state_dim = env.observation_space.shape[0]
     action_dim = env.action_space.n
 
-    random.seed(0)
-    np.random.seed(0)
-    env.reset(seed=0)
-    torch.manual_seed(0)
+    random.seed(1)
+    np.random.seed(1)
+    env.reset(seed=1)
+    torch.manual_seed(1)
     replay_buffer = RLUtil.rl_utils.ReplayBuffer(buffer_size)
     agent = DQN(state_dim, hidden_dim, action_dim, lr, gamma, epsilon, target_update, device, dqn_type='DuelingDQN')
-    return_list, max_q_value_list = train_dqn(agent, env, num_episodes, replay_buffer, minimal_size, batch_size)
+    return_list = train_dqn(agent, env, num_episodes, replay_buffer, minimal_size, batch_size)
 
     episodes_list = list(range(len(return_list)))
-    mv_return = RLUtil.rl_utils.moving_average(return_list, 5)
-    plt.plot(episodes_list, mv_return)
+    plt.plot(episodes_list, return_list)
     plt.xlabel('Episodes')
     plt.ylabel('Returns')
     plt.title('DQN on {}'.format(env_name))
     plt.show()
 
-    frames_list = list(range(len(max_q_value_list)))
-    plt.plot(frames_list, max_q_value_list)
-    plt.axhline(0, c='orange', ls='--')
-    plt.axhline(10, c='red', ls='--')
-    plt.xlabel('Frames')
-    plt.ylabel('Q value')
+    mv_return = RLUtil.rl_utils.moving_average(return_list, 9)
+    plt.plot(episodes_list, mv_return)
+    plt.xlabel('Episodes')
+    plt.ylabel('Returns')
     plt.title('DQN on {}'.format(env_name))
     plt.show()
 
