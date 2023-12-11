@@ -15,7 +15,7 @@ class PolicyNetContinuous(torch.nn.Module):
 
     def forward(self, x):
         x = F.relu(self.fc_1(x))
-        mu = 2.0 * torch.tanh(self.fc_mu(x))
+        mu = 2.0 * torch.tanh(self.fc_mu(x))  # tanh 函数的作用就是把输出限制到 [−1,1]
         std = F.softplus(self.fc_std(x))
         return mu, std
 
@@ -111,7 +111,7 @@ if __name__ == '__main__':
     # device = torch.device('cpu')
 
     env_name = 'Pendulum-v1'
-    env = gym.make(env_name)
+    env = gym.make(env_name, render_mode="human")
     env.reset(seed=0)
     torch.manual_seed(0)
     state_dim = env.observation_space.shape[0]
